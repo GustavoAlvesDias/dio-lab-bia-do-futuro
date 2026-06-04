@@ -1,149 +1,130 @@
-# 🤖 Agente Financeiro Inteligente com IA Generativa
+# 🤖 Edu - Educador Financeiro Virtual com IA Generativa Local
 
 ## Contexto
 
-Os assistentes virtuais no setor financeiro estão evoluindo de simples chatbots reativos para **agentes inteligentes e proativos**. Neste desafio, você vai idealizar e prototipar um agente financeiro que utiliza IA Generativa para:
+Os assistentes virtuais no setor financeiro estão evoluindo de simples chatbots reativos para **agentes inteligentes e proativos**. O **Edu** é um protótipo funcional de agente inteligente focado em educação financeira que utiliza IA Generativa local para:
 
-- **Antecipar necessidades** ao invés de apenas responder perguntas
-- **Personalizar** sugestões com base no contexto de cada cliente
-- **Cocriar soluções** financeiras de forma consultiva
-- **Garantir segurança** e confiabilidade nas respostas (anti-alucinação)
+- **Antecipar necessidades** interpretando os padrões de consumo antes do usuário pedir.
+- **Personalizar** as explicações com base no perfil de risco e objetivos reais de cada cliente.
+- **Cocriar soluções** de forma consultiva, ensinando o funcionamento de produtos financeiros.
+- **Garantir segurança** absoluta através de diretrizes anti-alucinação rígidas e processamento local.
 
 > [!TIP]
-> Na pasta [`examples/`](./examples/) você encontra referências de implementação para cada etapa deste desafio.
+> Esta solução foi desenvolvida utilizando **Ollama** para inferência de LLM local, garantindo que os dados financeiros do cliente fiquem protegidos na máquina e nunca sejam compartilhados externamente.
 
 ---
 
-## O Que Você Deve Entregar
+## Solução Entregue: Etapa por Etapa
 
 ### 1. Documentação do Agente
 
-Defina **o que** seu agente faz e **como** ele funciona:
+Definição de escopo e diretrizes de comportamento do assistente:
 
-- **Caso de Uso:** Qual problema financeiro ele resolve? (ex: consultoria de investimentos, planejamento de metas, alertas de gastos)
-- **Persona e Tom de Voz:** Como o agente se comporta e se comunica?
-- **Arquitetura:** Fluxo de dados e integração com a base de conhecimento
-- **Segurança:** Como evitar alucinações e garantir respostas confiáveis?
+- **Caso de Uso:** O Edu resolve a barreira de aprendizado para investidores e poupadores iniciantes, traduzindo conceitos técnicos em linguagem acessível e usando dados práticos da realidade do usuário.
+- **Persona e Tom de Voz:** Amigável, empático, extremamente didático e acolhedor (como um amigo com conhecimento avançado em finanças).
+- **Segurança (Anti-Alucinação):** Regras explícitas que impedem o agente de fazer recomendações diretas de compra de ativos ou fornecer informações fora de seu escopo técnico.
 
-📄 **Template:** [`docs/01-documentacao-agente.md`](./docs/01-documentacao-agente.md)
+📄 **Documento:** [`docs/01-documentacao-agente.md`](./docs/01-documentacao-agente.md)
 
 ---
 
-### 2. Base de Conhecimento
+### 2. Base de Conhecimento e Análise de Dados
 
-Utilize os **dados mockados** disponíveis na pasta [`data/`](./data/) para alimentar seu agente:
+O contexto dinâmico do agente é enriquecido através da leitura em tempo real de bases locais integradas. 
 
-| Arquivo | Formato | Descrição |
-|---------|---------|-----------|
-| `transacoes.csv` | CSV | Histórico de transações do cliente |
-| `historico_atendimento.csv` | CSV | Histórico de atendimentos anteriores |
-| `perfil_investidor.json` | JSON | Perfil e preferências do cliente |
-| `produtos_financeiros.json` | JSON | Produtos e serviços disponíveis |
+| Arquivo | Formato | Descrição do Uso no Edu |
+|---------|---------|-------------------------|
+| `transacoes.csv` | CSV | Análise automatizada de despesas e receitas para exemplos práticos. |
+| `historico_atendimento.csv` | CSV | Resgata o histórico recente para manter a contextualização e continuidade do chat. |
+| `perfil_investidor.json` | JSON | Captura nome, idade, patrimônio total, reserva atual e perfil (ex: Moderado). |
+| `produtos_financeiros.json` | JSON | Portfólio de produtos disponíveis (Tesouro Selic, CDB, LCI/LCA, FIIs). |
 
-Você pode adaptar ou expandir esses dados conforme seu caso de uso.
+#### 📊 Processamento Prático das Transações
+Como parte do entendimento dos dados, o ecossistema do agente consolida os gastos reais do arquivo `transacoes.csv`. Abaixo está a distribuição gráfica de despesas do cliente usada no contexto de injeção da LLM:
 
-📄 **Template:** [`docs/02-base-conhecimento.md`](./docs/02-base-conhecimento.md)
+![Resumo de Despesas](./resumo_despesas_edu.png)
+
+📄 **Documento:** [`docs/02-base-conhecimento.md`](./docs/02-base-conhecimento.md)
 
 ---
 
 ### 3. Prompts do Agente
 
-Documente os prompts que definem o comportamento do seu agente:
+Modelagem detalhada da Engenharia de Prompt para o direcionamento do modelo:
 
-- **System Prompt:** Instruções gerais de comportamento e restrições
-- **Exemplos de Interação:** Cenários de uso com entrada e saída esperada
-- **Tratamento de Edge Cases:** Como o agente lida com situações limite
+- **System Prompt:** Definição do papel ("Edu, educador financeiro"), objetivo principal e limitação estrita de respostas rápidas e diretas de até 3 parágrafos.
+- **Few-Shot Prompting:** Inclusão de cenários ideais pré-mapeados (perguntas conceituais, consultas de despesas pessoais e dúvidas de investimentos).
+- **Tratamento de Edge Cases:** Instruções severas bloqueando respostas sobre previsão do tempo, recusa de compartilhamento de dados de terceiros e tratamento para solicitações de recomendações diretas.
 
-📄 **Template:** [`docs/03-prompts.md`](./docs/03-prompts.md)
+📄 **Documento:** [`docs/03-prompts.md`](./docs/03-prompts.md)
 
 ---
 
 ### 4. Aplicação Funcional
 
-Desenvolva um **protótipo funcional** do seu agente:
+O protótipo funcional foi totalmente codificado no arquivo principal do sistema, dividindo-se em:
 
-- Chatbot interativo (sugestão: Streamlit, Gradio ou similar)
-- Integração com LLM (via API ou modelo local)
-- Conexão com a base de conhecimento
+- **Interface Gráfica (Streamlit):** Painel interativo de chat responsivo construído com `st.chat_input`, `st.chat_message` e spinners de carregamento assíncronos.
+- **Camada de Dados (Pandas & JSON):** Carregamento estruturado das bases usando chaves seguras (.get()) para mitigar quebras em tempo de execução.
+- **Orquestração da LLM (Requests + Ollama):** Criação da função de mensageria que formata dinamicamente o prompt contendo `SYSTEM_PROMPT` + `CONTEXTO_CLIENTE` + `PERGUNTA_USUARIO`, enviando via requisição POST para a API na porta `11434`.
 
-📁 **Pasta:** [`src/`](./src/)
+📁 **Código-Fonte:** [`src/app.py`](./src/app.py)
 
 ---
 
 ### 5. Avaliação e Métricas
 
-Descreva como você avalia a qualidade do seu agente:
+Matriz de validação empregada nos testes de aderência do assistente:
 
-**Métricas Sugeridas:**
-- Precisão/assertividade das respostas
-- Taxa de respostas seguras (sem alucinações)
-- Coerência com o perfil do cliente
+- **Cenários Testados:** Consultas sobre alimentação, requisições de indicação direta de investimentos, desvios de escopo comuns e questionamentos sobre papéis de bolsa inexistentes.
+- **Formulário de Feedback:** Métricas baseadas em escala de 1 a 5 para **Assertividade** (se respondeu à pergunta), **Segurança** (se respeitou as travas) e **Coerência** (clareza na linguagem).
 
-📄 **Template:** [`docs/04-metricas.md`](./docs/04-metricas.md)
+📄 **Documento:** [`docs/04-metricas.md`](./docs/04-metricas.md)
 
 ---
 
 ### 6. Pitch
 
-Grave um **pitch de 3 minutos** (estilo elevador) apresentando:
+Estruturação da apresentação comercial e técnica do projeto em um formato "Pitch de Elevador" de 3 minutos:
 
-- Qual problema seu agente resolve?
-- Como ele funciona na prática?
-- Por que essa solução é inovadora?
+- **Problema (30 seg):** A exclusão financeira e o medo de errar de 62% dos brasileiros por falta de conhecimento didático.
+- **Solução (60 seg):** Apresentação do Edu, o professor particular de finanças focado no contexto do próprio usuário.
+- **Demo (60 seg):** Demonstração prática respondendo "O que é CDI?" e mapeando as maiores despesas em tempo real.
+- **Diferencial (30 seg):** Solução open-source, rodando 100% local, custo zero de tokens e garantia absoluta de privacidade de dados sensíveis.
 
-📄 **Template:** [`docs/05-pitch.md`](./docs/05-pitch.md)
-
----
-
-## Ferramentas Sugeridas
-
-Todas as ferramentas abaixo possuem versões gratuitas:
-
-| Categoria | Ferramentas |
-|-----------|-------------|
-| **LLMs** | [ChatGPT](https://chat.openai.com/), [Copilot](https://copilot.microsoft.com/), [Gemini](https://gemini.google.com/), [Claude](https://claude.ai/), [Ollama](https://ollama.ai/) |
-| **Desenvolvimento** | [Streamlit](https://streamlit.io/), [Gradio](https://www.gradio.app/), [Google Colab](https://colab.research.google.com/) |
-| **Orquestração** | [LangChain](https://www.langchain.com/), [LangFlow](https://www.langflow.org/), [CrewAI](https://www.crewai.com/) |
-| **Diagramas** | [Mermaid](https://mermaid.js.org/), [Draw.io](https://app.diagrams.net/), [Excalidraw](https://excalidraw.com/) |
+📄 **Documento:** [`docs/05-pitch.md`](./docs/05-pitch.md)
 
 ---
 
-## Estrutura do Repositório
+## Ferramentas e Bibliotecas Utilizadas
 
-```
-📁 lab-agente-financeiro/
+| Categoria | Tecnologia | Uso no Projeto |
+|-----------|------------|----------------|
+| **LLM Engine** | [Ollama](https://ollama.ai/) | Motor de inferência local rodando o modelo `gpt-oss`. |
+| **Interface** | [Streamlit](https://streamlit.io/) | Frontend completo para a aplicação interativa de chat. |
+| **Data Engine** | [Pandas](https://pandas.pydata.org/) | Manipulação de arquivos tabulares (.csv) e filtragem de transações. |
+| **Comunicação**| [Requests](https://requests.readthedocs.io/) | Integração de backend enviando as requisições para a API local do modelo. |
+
+📁 edu-agente-financeiro/
 │
-├── 📄 README.md
+├── 📄 README.md                      # Documentação principal da solução
+├── 📄 resumo_despesas_edu.png        # Gráfico estatístico extraído do motor de dados
 │
-├── 📁 data/                          # Dados mockados para o agente
-│   ├── historico_atendimento.csv     # Histórico de atendimentos (CSV)
-│   ├── perfil_investidor.json        # Perfil do cliente (JSON)
-│   ├── produtos_financeiros.json     # Produtos disponíveis (JSON)
-│   └── transacoes.csv                # Histórico de transações (CSV)
+├── 📁 data/                          # Base de conhecimento integrada do cliente
+│   ├── historico_atendimento.csv     # Extrato das últimas interações
+│   ├── perfil_investidor.json        # Dados de perfil, objetivos e patrimônio
+│   ├── produtos_financeiros.json     # Catálogo conceitual de investimentos
+│   └── transacoes.csv                # Extrato de receitas e saídas do cliente
 │
-├── 📁 docs/                          # Documentação do projeto
-│   ├── 01-documentacao-agente.md     # Caso de uso e arquitetura
-│   ├── 02-base-conhecimento.md       # Estratégia de dados
-│   ├── 03-prompts.md                 # Engenharia de prompts
-│   ├── 04-metricas.md                # Avaliação e métricas
-│   └── 05-pitch.md                   # Roteiro do pitch
+├── 📁 docs/                          # Engenharia de prompts e documentações
+│   ├── 01-documentacao-agente.md     # Escopo de caso de uso e persona
+│   ├── 02-base-conhecimento.md       # Estratégia e adaptações de dados
+│   ├── 03-prompts.md                 # System prompts e travas anti-alucinação
+│   ├── 04-metricas.md                # Cenários de teste e formulário de avaliação
+│   └── 05-pitch.md                   # Roteiro cronometrado da solução
 │
-├── 📁 src/                           # Código da aplicação
-│   └── app.py                        # (exemplo de estrutura)
-│
-├── 📁 assets/                        # Imagens e diagramas
-│   └── ...
-│
-└── 📁 examples/                      # Referências e exemplos
-    └── README.md
-```
+└── 📁 src/                           # Backend e aplicação do sistema
+└── app.py                        # Script integrado em Python (Streamlit + LLM Client)
 
 ---
 
-## Dicas Finais
-
-1. **Comece pelo prompt:** Um bom system prompt é a base de um agente eficaz
-2. **Use os dados mockados:** Eles garantem consistência e evitam problemas com dados sensíveis
-3. **Foque na segurança:** No setor financeiro, evitar alucinações é crítico
-4. **Teste cenários reais:** Simule perguntas que um cliente faria de verdade
-5. **Seja direto no pitch:** 3 minutos passam rápido, vá ao ponto
