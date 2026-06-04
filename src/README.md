@@ -25,5 +25,5 @@ pip install streamlit pandas requests
 ollama serve
 
 # 3. Rodar o app
-streamlit run .\src\app.py
+streamlit run \src\app.py
 ```
